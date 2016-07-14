@@ -1,46 +1,55 @@
 var React = require("react");
 var FixedDataTable = require("fixed-data-table");
 
+var version = require("./package.json").version;
+
+
+var Table = React.createClass({
+  render: function() {
+    var rows = this.props.rows;
+    var data = this.props.data;
+
+    return React.createElement("table", {}, [
+      React.createElement("thead", {}, [
+        React.createElement("tr", {}, rows.map(function(rowKey) {
+          return React.createElement("th", {}, rowKey);
+        }))
+      ]),
+      React.createElement("tbody", {}, data.map(function(item) {
+        return React.createElement("tr", {}, 
+          rows.map(function(rowKey) {
+            return React.createElement("td", {"data-title": rowKey}, item[rowKey])
+          })
+        )
+      }))
+    ]);
+  }
+});
 
 var JsonSchema = React.createClass({
   render: function() {
-    var MyCell = function(opts) {
-      console.log(opts);
-      return React.createElement(FixedDataTable.Cell, {}, 
-        opts.data[opts.rowIndex][opts.col]
-      )
+    if(!this.props.schema) {
+      return React.createElement("div", {className: "schema schema--empty"}, "");
     }
 
-    var dataList = [
-      {avartar: "foo"},
-      {avartar: "bar"},
-      {avartar: "baz"}
-    ]
+    var schema = this.props.schema;
+    var schemaKeys = Object.keys(schema);
 
-    return React.createElement(FixedDataTable.Table, {
-      rowHeight: 50,
-      headerHeight: 50,
-      rowsCount: dataList.length,
-      width: 1000,
-      height: 100,
-    }, [
-      React.createElement(FixedDataTable.Column, {
-        cell: React.createElement(FixedDataTable.Cell, {}, "Hello"),
-        fixed: true,
-        width: 50
+    if(schemaKeys.length < 1) {
+      return React.createElement("div", {className: "schema schema--empty"}, "Not yet defined")
+    }
+    else if(schemaKeys.length === 1 && schemaKeys[0] === "properties") {
+      var props = this.props.schema.properties
+      var arrProps = Object.keys(props).map(function(name) {
+        return Object.assign(props[name], {name: name}) 
       })
-    ])
-
-    // return React.createElement("table", {}, [
-    //   React.createElement("tbody", {}, [
-    //     React.createElement("tr", {}, [
-    //       React.createElement("td", {}, [
-    //       ])
-    //     ])
-    //   ])
-    // ]);
+      return React.createElement(Table, {className: "schema", data: arrProps, rows: ["name", "type", "description"]});
+    }
+    else {
+      return React.createElement("div", {className: "schema"}, JSON.stringify(schema))
+    }
   }
-});
+})
 
 var Toc = React.createClass({
   render: function() {
@@ -52,7 +61,7 @@ var Toc = React.createClass({
           [
             React.createElement(
               "a",
-              {href: "#"},
+              {href: "#"+toSlug(item.title)},
               item.title
             )
           ]
@@ -86,13 +95,25 @@ var Schemas = React.createClass({
             [
               React.createElement(
                 "h4",
+                {className: "route__schemas__request__title"},
+                "Path parameters"
+              ),
+              React.createElement(
+                "div",
+                {className: "route__url__schema"},
+                React.createElement(JsonSchema, {schema: this.props.request.params})
+              ),
+              React.createElement(
+                "h4",
                 {className: "schema__title"},
                 "Query parameters"
               ),
               React.createElement(
                 "div",
-                {className: "schema"},
-                JSON.stringify(this.props.request.query)
+                {className: "route__url__schema"},
+                React.createElement(JsonSchema, {
+                  schema: this.props.request.query
+                })
               ),
               React.createElement(
                 "h4",
@@ -101,8 +122,10 @@ var Schemas = React.createClass({
               ),
               React.createElement(
                 "div",
-                {className: "schema"},
-                JSON.stringify(this.props.request.headers)
+                {className: "route__url__schema"},
+                React.createElement(JsonSchema, {
+                  schema: this.props.request.headers
+                })
               ),
               React.createElement(
                 "h4",
@@ -111,8 +134,10 @@ var Schemas = React.createClass({
               ),
               React.createElement(
                 "div",
-                {className: "schema"},
-                JSON.stringify(this.props.request.body)
+                {className: "route__url__schema"},
+                React.createElement(JsonSchema, {
+                  schema: this.props.request.body
+                })
               )
             ]
           ),
@@ -132,8 +157,10 @@ var Schemas = React.createClass({
               ),
               React.createElement(
                 "div",
-                {className: "schema"},
-                JSON.stringify(this.props.request.headers)
+                {className: "route__url__schema"},
+                React.createElement(JsonSchema, {
+                  schema: this.props.response.headers
+                })
               ),
               React.createElement(
                 "h4",
@@ -143,7 +170,13 @@ var Schemas = React.createClass({
               React.createElement(
                 "div",
                 {className: "schema"},
-                JSON.stringify(this.props.request.body)
+                React.createElement(
+                  "div",
+                  {className: "route__url__schema"},
+                  React.createElement(JsonSchema, {
+                    schema: this.props.response.body
+                  })
+                )
               )
             ]
           )
@@ -188,11 +221,6 @@ var Route = React.createClass({
               },
               this.props.url
             ),
-            // React.createElement(
-            //   "div",
-            //   {className: "route__url__schema"},
-            //   JSON.stringify(this.props.schemas.request.params)
-            // )
           ]
         ),
         schemas
@@ -202,18 +230,41 @@ var Route = React.createClass({
 });
 
 
+function toSlug(str) {
+  return str.toLowerCase().replace(" ", "-");
+}
+
+
 module.exports = React.createClass({
   render: function() {
     // Generate the routes
     var routes = this.props.routes.map(function(route) {
-      return React.createElement(Route, route);
+      return React.createElement("div", {}, [
+        React.createElement("a", {
+          id: toSlug(route.title)
+        }),
+        React.createElement(Route, route)
+      ])
     });
 
     var tocs = React.createElement(Toc, {items: this.props.routes});
 
+    var rows = ["name", "type", "description"];
+    var data = [
+      {
+        name: "filter",
+        type: "string",
+        description: "Indicates which sorts of issues to return."
+      },
+      {
+        name: "state",
+        type: "string",
+        description: "Indicates the state of the issues to return."
+      }
+    ]
+
     return (
       React.createElement("div", {}, [
-        // React.createElement(JsonSchema, {}, []),
         React.createElement("div", {className: "app__body"}, [
           React.createElement(
             "h1",
@@ -240,7 +291,11 @@ module.exports = React.createClass({
         React.createElement(
           "footer",
           {className: "app__footer"},
-          "rest-doc"
+          [
+            React.createElement("a", {href: "https://github.com/orangemug/rest-doc"}, "rest-doc"),
+            "@",
+            React.createElement("a", {href: "https://github.com/orangemug/rest-doc/tree/v"+version}, "v"+version)
+          ]
         )
       ])
     );
