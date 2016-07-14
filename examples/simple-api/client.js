@@ -39,7 +39,28 @@ ReactDOM.render(
             headers: {},
             body: {}
           }
-        }
+        },
+        examples: [
+          {
+            request: {
+              url: "/status",
+              headers: {},
+              body: {}
+            },
+            response: {
+              headers: {
+                "Status": "200"
+              },
+              body: {
+                systems: [
+                  {
+                    database: "ok"
+                  }
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         method: "get",
