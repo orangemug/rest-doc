@@ -10,12 +10,12 @@ a {
 }
 
 
-.http-get    { background-color: #2ECC40; }
-.http-head   { background-color: #01FF70; }
-.http-post   { background-color: #FFDC00; }
-.http-put    { background-color: #FF851B; }
-.http-delete { background-color: #FF4136; }
-.http-patch  { background-color: #F012BE; }
+/* .http-get    { background-color: #2ECC40; } */
+/* .http-head   { background-color: #01FF70; } */
+/* .http-post   { background-color: #FFDC00; } */
+/* .http-put    { background-color: #FF851B; } */
+/* .http-delete { background-color: #FF4136; } */
+/* .http-patch  { background-color: #F012BE; } */
 
 h1, h2, h3, h4 {
   margin: 0.8em 0;
@@ -30,14 +30,34 @@ h4 + p
   margin-top: 0;
 }
 
-h1, h2 {
+h1 {
   margin-top: 0;
 }
 
 .route {
   border-top: solid 2px #f1f1f1;
-  margin-top: 1.8em;
-  padding-top: 1.4em;
+  margin-top: 1em;
+  padding-top: 1em;
+  display: flex;
+}
+
+.route__def {
+  flex-basis: 50%;
+  padding-right: 0.8em;
+}
+
+.route__def > h2 {
+  margin-top: 0;
+}
+
+.route__examples {
+  flex-basis: 50%;
+  padding-left: 0.8em;
+  border-left: solid 1px #ddd;
+}
+
+.route__examples > h2 {
+  margin-top: 0;
 }
 
 .route__description {
@@ -55,6 +75,7 @@ h1, h2 {
   border: solid 1px #ddd;
   border-radius: 0.2em;
   display: flex;
+  font-family: monospace;
 }
 
 .route__url__method {
@@ -62,6 +83,7 @@ h1, h2 {
   display: inline-block;
   padding: 0.4em 0.6em;
   text-transform: uppercase;
+  border-right: solid 1px #ddd;
 }
 
 .route__url__path {
@@ -70,12 +92,16 @@ h1, h2 {
   flex: 1;
 }
 
-.app__body {
-  padding: 0.8em;
-  padding-bottom: 3.2em;
+.app {
   background-color: white;
   margin-top: 3px;
   border-top: solid 1px #dadada;
+}
+
+.app__body {
+  margin: 0 auto;
+  padding: 0.8em;
+  padding-bottom: 3.2em;
 }
 
 .app__footer {
@@ -83,6 +109,18 @@ h1, h2 {
   text-align: center;
   color: #555;
   border-top: solid 1px #ddd;
+}
+
+.app__footer__version {
+  font-size: smaller;
+}
+
+.app__footer__version:before {
+  content: "(";
+}
+
+.app__footer__version:after {
+  content: ")";
 }
 
 .app__footer a {
@@ -128,6 +166,12 @@ th, td {
   table, thead, tbody, th, td, tr { 
     display: block; 
   }
+
+  tr {
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    margin-bottom: 4px;
+  }
   
   /* Hide table headers (but not display: none;, for accessibility) */
   thead tr { 
@@ -136,24 +180,22 @@ th, td {
     left: -9999px;
   }
   
-  tr { border: 1px solid #ccc; }
+  tr {
+    border-bottom: 1px solid #ccc;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
   
   td { 
     /* Behave  like a "row" */
     border: none;
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid #eee;
     position: relative;
-    padding-left: 50%; 
   }
   
   td:before { 
-    /* Now like a table header */
-    position: absolute;
-    /* Top/left values mimic padding */
-    top: 6px;
-    left: 6px;
-    width: 45%; 
-    padding-right: 10px; 
     white-space: nowrap;
   }
   
@@ -163,5 +205,78 @@ th, td {
   td:before {
     content: attr(data-title);
     font-weight: bold;
+    padding-right: 0.2em;
+    white-space: nowrap;
+    display: block;
   }
 }
+
+@media only screen and (max-width: 940px) {
+  .route {
+    flex-direction: column;
+  }
+
+  .route__def {
+    padding: 0;
+  }
+
+  .route__examples {
+    padding: 0;
+    border: none;
+  }
+
+  .route__examples > h2 {
+    margin-top: 0.8em;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: sans-serif;
+  font-weight: 400;
+}
+
+h2 {
+  font-weight: 500;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+.example__http {
+  color: black;
+  border-radius: 2px;
+  border: solid 1px #e2e2e2;
+}
+
+.example__http__header {
+  background-color: #f9f9f9;
+  padding: 0.4em;
+  border-bottom: solid 1px #ddd;
+  font-family: monospace;
+  margin: 0;
+  list-style: none;
+}
+
+.example__http__header:empty::before {
+  content: "No headers";
+}
+
+
+.example__http__body {
+  padding: 0.4em;
+  overflow-x: auto;
+}
+
+.example__http__body pre {
+  margin: 0;
+  color: #333;
+}
+
+.cmd-line {
+  font-family: monospace;
+  padding: 0.4em;
+  border: solid 1px #ddd;
+  border-radius: 2px;
+}
+
