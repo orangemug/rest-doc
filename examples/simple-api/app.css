@@ -1,0 +1,93 @@
+body {
+  background-color: #fff;
+  padding: 0;
+  margin: 0;
+  background-color: #eee;
+}
+
+a {
+  color: inherit;
+}
+
+
+.http-get    { background-color: #2ECC40; }
+.http-head   { background-color: #01FF70; }
+.http-post   { background-color: #FFDC00; }
+.http-put    { background-color: #FF851B; }
+.http-delete { background-color: #FF4136; }
+.http-patch  { background-color: #F012BE; }
+
+h1, h2, h3, h4 {
+  margin: 0.8em 0;
+  margin-bottom: 0.4em;
+}
+
+h1 + p,
+h2 + p,
+h3 + p,
+h4 + p
+{
+  margin-top: 0;
+}
+
+h1, h2 {
+  margin-top: 0;
+}
+
+.route {
+  border-top: solid 2px #f1f1f1;
+  margin-top: 1.8em;
+  padding-top: 1.4em;
+}
+
+.route__description {
+}
+
+.schema {
+  padding: 0.4em;
+  background-color: #f1f1f1;
+  border-radius: 0.2em;
+  color: #1d1d1d;
+  border: solid 1px #dadada;
+}
+
+.route__url {
+  position: relative;
+  overflow: hidden;
+  border: solid 1px #ddd;
+  border-radius: 0.2em;
+  display: flex;
+}
+
+.route__url__method {
+  color: #222;
+  display: inline-block;
+  padding: 0.4em 0.6em;
+  text-transform: uppercase;
+}
+
+.route__url__path {
+  display: inline-block;
+  padding: 0.4em 0.6em;
+  flex: 1;
+}
+
+.app__body {
+  padding: 0.8em;
+  padding-bottom: 3.2em;
+  background-color: white;
+  margin-top: 3px;
+  border-top: solid 1px #dadada;
+}
+
+.app__footer {
+  padding: 1.2em;
+  text-align: center;
+  color: #555;
+  border-top: solid 1px #ddd;
+}
+
+.toc {
+  list-style-type: lower-roman;
+  padding-left: 1.6em;
+}
