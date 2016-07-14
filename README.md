@@ -112,6 +112,24 @@ This helps in the following sceneario
  6. You feel happy and confident it's no longer an issue :)
 
 
+## Simple status spec
+Status of an app and its services
+
+    [GET] /api/status
+    200 OK
+    {
+      status: [
+        {
+          id: "app",
+          name: "Application"
+          status: "ok"
+        } 
+      ],
+      services: [
+        "http://search.sequor.io"
+      ]
+    }
+
 
 ## CLI Usage
 To start a server
