@@ -1,5 +1,4 @@
 var React = require("react");
-var FixedDataTable = require("fixed-data-table");
 
 var version = require("./package.json").version;
 
@@ -29,7 +28,7 @@ var Table = React.createClass({
 var JsonSchema = React.createClass({
   render: function() {
     if(!this.props.schema) {
-      return React.createElement("div", {className: "schema schema--empty"}, "");
+      return React.createElement("div", {className: "schema schema--empty"}, "Not required");
     }
 
     var schema = this.props.schema;
@@ -193,42 +192,107 @@ var Route = React.createClass({
 
     return (
       React.createElement("div", {className: "route"}, [
-        React.createElement(
-          "h2",
-          {className: "route__title"},
-          this.props.title
-        ),
-        React.createElement(
-          "p",
-          {className: "route__description"},
-          this.props.description
-        ),
+        React.createElement("div", {className: "route__def"}, [
+          React.createElement(
+            "h2",
+            {className: "route__title"},
+            this.props.title
+          ),
+          React.createElement(
+            "p",
+            {className: "route__description"},
+            this.props.description
+          ),
+          React.createElement(
+            "div",
+            {className: "route__url"},
+            [
+              React.createElement(
+                "div",
+                {
+                  className: "route__url__method http-"+this.props.method
+                },
+                this.props.method
+              ),
+              React.createElement(
+                "div",
+                {
+                  className: "route__url__path"
+                },
+                this.props.url
+              )
+            ]
+          ),
+          schemas
+        ]),
         React.createElement(
           "div",
-          {className: "route__url"},
-          [
-            React.createElement(
-              "div",
-              {
-                className: "route__url__method http-"+this.props.method,
-              },
-              this.props.method
-            ),
-            React.createElement(
-              "div",
-              {
-                className: "route__url__path",
-              },
-              this.props.url
-            ),
-          ]
-        ),
-        schemas
+          {
+            className: "route__examples",
+          },
+          React.createElement("h2", {}, "Examples"),
+          React.createElement("p", {}, [
+            "Examples: ",
+            React.createElement("select", {}, [
+              React.createElement("option", {}, "Simple")
+            ]),
+          ]),
+          React.createElement("div", {}, 
+            (this.props.examples || []).map(function(example) {
+              return React.createElement(HttpReq, example)
+            })
+          )
+        )
       ])
     );
   }
 });
 
+
+var HttpReqReq = React.createClass({
+  render: function() {
+    var headers = Object.keys(this.props.headers).map(function(key) {
+      var str = key+": "+this.props.headers[key];
+      return React.createElement("li", {}, str);
+    }, this);
+
+    var body;
+    console.log(this.props.body);
+    if(Object.keys(this.props.body).length < 1) {
+      body = React.createElement("pre", {}, JSON.stringify(this.props.body, null, 2))
+    }
+    else {
+      body = React.createElement("pre", {}, "No body")
+    }
+
+    return React.createElement("div", {className: this.props.className}, [
+      React.createElement("ul", {className: "example__http__header"}, headers),
+      React.createElement("div", {className: "example__http__body"}, body)
+    ])
+  }
+})
+
+var HttpReq = React.createClass({
+  render: function() {
+    return (
+      React.createElement("div", {}, [
+        // React.createElement("div", {className: "cmd-line"}, "curl -X GET http://example.com/foo/bar"),
+        React.createElement("h3", {}, "Request"),
+        React.createElement(HttpReqReq,
+          Object.assign(this.props.request, {
+            className: "example__http example__request"
+          })
+        ),
+        React.createElement("h3", {}, "Response"),
+        React.createElement(HttpReqReq,
+          Object.assign(this.props.response, {
+            className: "example__http example__response"
+          })
+        )
+      ])
+    );
+  }
+});
 
 function toSlug(str) {
   return str.toLowerCase().replace(" ", "-");
@@ -264,40 +328,41 @@ module.exports = React.createClass({
     ]
 
     return (
-      React.createElement("div", {}, [
-        React.createElement("div", {className: "app__body"}, [
-          React.createElement(
-            "h1",
-            {className: "app__name"},
-            this.props.app.name
-          ),
-          // React.createElement(
-          //   "div",
-          //   {className: "app__version"},
-          //   this.props.app.version
-          // ),
-          React.createElement(
-            "p",
-            {className: "app__description"},
-            this.props.app.description
-          ),
-          tocs,
-          React.createElement(
-            "div",
-            {className: "app__routes"},
-            routes
-          ),
+      React.createElement("div", {className: "root"}, [
+        React.createElement("div", {className: "app"}, [
+          React.createElement("div", {className: "app__body"}, [
+            React.createElement(
+              "h1",
+              {className: "app__name"},
+              this.props.app.name
+            ),
+            React.createElement(
+              "p",
+              {className: "app__description"},
+              this.props.app.description
+            ),
+            tocs,
+            React.createElement(
+              "div",
+              {className: "app__routes"},
+              routes
+            ),
+          ])
         ]),
         React.createElement(
           "footer",
           {className: "app__footer"},
           [
+            "Made with ",
             React.createElement("a", {href: "https://github.com/orangemug/rest-doc"}, "rest-doc"),
-            "@",
-            React.createElement("a", {href: "https://github.com/orangemug/rest-doc/tree/v"+version}, "v"+version)
+            " ",
+            React.createElement("a", {
+              className: "app__footer__version",
+              href: "https://github.com/orangemug/rest-doc/tree/v"+version
+            }, "v"+version)
           ]
         )
       ])
-    );
+    )
   }
 });
