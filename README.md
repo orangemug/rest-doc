@@ -8,31 +8,31 @@ The server must conform to the [simple routing spec](#simple-routing-spec)
 ## Simple routing spec
 A really simple routing spec, all available routes should be listed at
 
-    [GET] /api/schema
+    [GET] /api/schema.json
     200 OK
-    X-Rest-Doc-Version: "0.1"
-    [
-      "/status",
-      "/version",
-      "/user/:user"
-    ]
-
-You should also be able to make a _HEAD_ request to check if the schema docs are available
-
-    [HEAD] /api/schema
-    X-Rest-Doc-Version: "0.1"
-    200 OK
-
-Note it is assumed that if the header `X-Rest-Doc-Version` exists then this endpoint is supported. Renderer can also use this to support multiple versions of the documentation generator
+    {
+      // We use the url as the defintion so it documents itself
+      "definition": "https://orangemug.github.io/rest-doc/v0.1",
+      "version": "0.1.1",
+      "routes": [
+        "/status",
+        "/version",
+        "/user/:user"
+      ]
+    }
 
 If not supported it'll just `404` which should be the normal operation of the server
 
-    [HEAD] /api/schema
+    [HEAD] /api/schema.json
     404 OK
 
-As all _GET_ requests
+The schema of the `/api/schema.json` makes it a valid `rest-doc` server.
 
-A request to any of these resources will respond with the schema for that endpoint
+We don't use the `Accept: application/vnd.api+json` style logic because an aim of this API is to be able to be hosted on a static file server (github pages).
+
+The schema of all routes defined in the `/api/schema.json` should be available via appending to the `/api/schema/` base route.
+
+This describes all the methods that are available on that route, for example
 
     [GET] /api/schema/user/:user
     [
@@ -73,6 +73,10 @@ A request to any of these resources will respond with the schema for that endpoi
         }
       }
     ]
+
+**Note**: we use `.json` rather than relying on the accept headers to allow for static file servers to be fully functional API servers.
+
+The aim of this API is to be as simple as possible.
 
 
 ## Simple changelog spec
@@ -197,13 +201,6 @@ This will only support `GET` requests. Although later it could be possible to tr
 
 **NOTE:** Look at operational transforms (OT)
 
-
-
-
-
-
-
-    
 
 ## License
 [MIT](LICENSE)
