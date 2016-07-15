@@ -203,26 +203,7 @@ var Route = React.createClass({
             {className: "route__description"},
             this.props.description
           ),
-          React.createElement(
-            "div",
-            {className: "route__url"},
-            [
-              React.createElement(
-                "div",
-                {
-                  className: "route__url__method http-"+this.props.method
-                },
-                this.props.method
-              ),
-              React.createElement(
-                "div",
-                {
-                  className: "route__url__path"
-                },
-                this.props.url
-              )
-            ]
-          ),
+          React.createElement(Url, {method: this.props.method, url: this.props.url}),
           schemas
         ]),
         React.createElement(
@@ -249,6 +230,32 @@ var Route = React.createClass({
 });
 
 
+var Url = React.createClass({
+  render: function() {
+    return React.createElement(
+      "div",
+      {className: "route__url"},
+      [
+        React.createElement(
+          "div",
+          {
+            className: "route__url__method http-"+this.props.method
+          },
+          this.props.method
+        ),
+        React.createElement(
+          "div",
+          {
+            className: "route__url__path"
+          },
+          this.props.url
+        )
+      ]
+    );
+  }
+});
+
+
 var HttpReqReq = React.createClass({
   render: function() {
     var headers = Object.keys(this.props.headers).map(function(key) {
@@ -259,10 +266,10 @@ var HttpReqReq = React.createClass({
     var body;
     console.log(this.props.body);
     if(Object.keys(this.props.body).length < 1) {
-      body = React.createElement("pre", {}, JSON.stringify(this.props.body, null, 2))
+      body = React.createElement("pre", {}, "No body")
     }
     else {
-      body = React.createElement("pre", {}, "No body")
+      body = React.createElement("pre", {}, JSON.stringify(this.props.body, null, 2))
     }
 
     return React.createElement("div", {className: this.props.className}, [
@@ -278,6 +285,7 @@ var HttpReq = React.createClass({
       React.createElement("div", {}, [
         // React.createElement("div", {className: "cmd-line"}, "curl -X GET http://example.com/foo/bar"),
         React.createElement("h3", {}, "Request"),
+        React.createElement(Url, {method: this.props.method, url: this.props.url}),
         React.createElement(HttpReqReq,
           Object.assign(this.props.request, {
             className: "example__http example__request"
