@@ -39,13 +39,21 @@ var JsonSchema = React.createClass({
     }
     else if(schemaKeys.length === 1 && schemaKeys[0] === "properties") {
       var props = this.props.schema.properties
-      var arrProps = Object.keys(props).map(function(name) {
-        return Object.assign(props[name], {name: name}) 
-      })
+      var arrProps = Object.keys(props)
+        .map(function(name) {
+          var obj = Object.assign({}, props[name], {name: name});
+
+          // HACK: In an enum
+          if(obj.enum) {
+            obj.description += " ("+obj.enum.join(", ")+")";
+          }
+          return obj;
+        })
+
       return React.createElement(Table, {className: "schema", data: arrProps, rows: ["name", "type", "description"]});
     }
     else {
-      return React.createElement("div", {className: "schema"}, JSON.stringify(schema))
+      return React.createElement("pre", {className: "schema"}, JSON.stringify(schema, null, 2))
     }
   }
 })
@@ -264,7 +272,6 @@ var HttpReqReq = React.createClass({
     }, this);
 
     var body;
-    console.log(this.props.body);
     if(Object.keys(this.props.body).length < 1) {
       body = React.createElement("pre", {}, "No body")
     }
