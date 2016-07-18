@@ -60,21 +60,40 @@ var JsonSchema = React.createClass({
 
 var Toc = React.createClass({
   render: function() {
-    var tocs = this.props.items.map(function(item) {
-      return (
-        React.createElement(
-          "li",
-          {},
-          [
-            React.createElement(
-              "a",
-              {href: "#"+toSlug(item.title)},
-              item.title
-            )
-          ]
+    var tocs = [];
+
+    for(var group in this.props.items) {
+      var routes = this.props.items[group].map(function(item) {
+        return (
+          React.createElement(
+            "li",
+            {},
+            [
+              React.createElement(
+                "a",
+                {href: "#"+toSlug(item.title)},
+                item.title
+              )
+            ]
+          )
         )
-      )
-    })
+      });
+
+      var groupTitle;
+      if(this.props.groups && this.props.groups[group]) {
+        groupTitle = this.props.groups[group].title || group;
+      }
+      else {
+        groupTitle = group;
+      }
+
+      var el = React.createElement("li", {}, [
+        // React.createElement("p", {}, group),
+        groupTitle,
+        React.createElement("ul", {}, routes)
+      ])
+      tocs.push(el)
+    }
 
     return React.createElement(
       "ul",
@@ -317,30 +336,32 @@ function toSlug(str) {
 module.exports = React.createClass({
   render: function() {
     // Generate the routes
-    var routes = this.props.routes.map(function(route) {
-      return React.createElement("div", {}, [
-        React.createElement("a", {
-          id: toSlug(route.title)
-        }),
-        React.createElement(Route, route)
-      ])
-    });
-
-    var tocs = React.createElement(Toc, {items: this.props.routes});
-
-    var rows = ["name", "type", "description"];
-    var data = [
-      {
-        name: "filter",
-        type: "string",
-        description: "Indicates which sorts of issues to return."
-      },
-      {
-        name: "state",
-        type: "string",
-        description: "Indicates the state of the issues to return."
+    var routes = [];
+    for(var group in this.props.routes) {
+      var groups = this.props.groups;
+      if(groups && groups.hasOwnProperty(group)) {
+        var el = React.createElement("div", {}, [
+          React.createElement("h1", {}, groups[group].title),
+          React.createElement("p", {}, groups[group].description)
+        ])
+        routes.push(el);
       }
-    ]
+
+      this.props.routes[group].forEach(function(route) {
+        var el = React.createElement("div", {}, [
+          React.createElement("a", {
+            id: toSlug(route.title)
+          }),
+          React.createElement(Route, route)
+        ])
+        routes.push(el);
+      });
+    }
+
+    var tocs = React.createElement(Toc, {
+      items: this.props.routes,
+      groups: this.props.groups
+    });
 
     return (
       React.createElement("div", {className: "root"}, [
