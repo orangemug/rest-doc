@@ -52,8 +52,9 @@ var apiDef = {
       },
       examples: [
         {
+          method: "get",
+          url: "/status",
           request: {
-            url: "/status",
             headers: {},
             body: {}
           },

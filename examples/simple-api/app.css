@@ -17,7 +17,7 @@ a {
 /* .http-delete { background-color: #FF4136; } */
 /* .http-patch  { background-color: #F012BE; } */
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5 {
   margin: 0.8em 0;
   margin-bottom: 0.4em;
 }
@@ -25,7 +25,8 @@ h1, h2, h3, h4 {
 h1 + p,
 h2 + p,
 h3 + p,
-h4 + p
+h4 + p,
+h5 + p
 {
   margin-top: 0;
 }
@@ -34,8 +35,17 @@ h1 {
   margin-top: 0;
 }
 
-.route {
+.route-group {
   border-top: solid 2px #f1f1f1;
+  margin-top: 0.8em;
+}
+
+.route-group__anchor {
+  display: block;
+}
+
+.route {
+  border-top: dashed 2px #f1f1f1;
   margin-top: 1em;
   padding-top: 1em;
   display: flex;
@@ -47,6 +57,10 @@ h1 {
 }
 
 .route__def > h2 {
+  margin-top: 0;
+}
+
+.route__def > h3 {
   margin-top: 0;
 }
 
@@ -76,6 +90,7 @@ h1 {
   border-radius: 0.2em;
   display: flex;
   font-family: monospace;
+  margin-bottom: 0.4em;
 }
 
 .route__url__method {
@@ -229,7 +244,8 @@ th, td {
     border: none;
   }
 
-  .route__examples > h2 {
+  .route__examples > h2,
+  .route__examples > h3 {
     margin-top: 0.8em;
   }
 }

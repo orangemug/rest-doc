@@ -73,7 +73,7 @@ var Toc = React.createClass({
           [
             React.createElement(
               "a",
-              {href: "#"+toSlug(route.title)},
+              {href: "#route-"+toSlug(route.title)},
               route.title
             )
           ]
@@ -91,7 +91,11 @@ var Toc = React.createClass({
 
         if(_tocs.length > 0) {
           tocs.push(
-            group.title,
+            React.createElement(
+              "a",
+              {href: "#group-"+toSlug(group.id)},
+              group.title
+            ),
             React.createElement("ul", {}, _tocs)
           )
         }
@@ -117,7 +121,7 @@ var Schemas = React.createClass({
         {className: "route__schemas"},
         [
           React.createElement(
-            "h3",
+            "h4",
             {className: "route__schemas__request__title"},
             "Request"
           ),
@@ -126,7 +130,7 @@ var Schemas = React.createClass({
             {className: "route__schemas__request"},
             [
               React.createElement(
-                "h4",
+                "h5",
                 {className: "route__schemas__request__title"},
                 "Path parameters"
               ),
@@ -136,7 +140,7 @@ var Schemas = React.createClass({
                 React.createElement(JsonSchema, {schema: this.props.request.params})
               ),
               React.createElement(
-                "h4",
+                "h5",
                 {className: "schema__title"},
                 "Query parameters"
               ),
@@ -148,7 +152,7 @@ var Schemas = React.createClass({
                 })
               ),
               React.createElement(
-                "h4",
+                "h5",
                 {className: "schema__title"},
                 "Headers"
               ),
@@ -160,7 +164,7 @@ var Schemas = React.createClass({
                 })
               ),
               React.createElement(
-                "h4",
+                "h5",
                 {className: "schema__title"},
                 "Body"
               ),
@@ -174,7 +178,7 @@ var Schemas = React.createClass({
             ]
           ),
           React.createElement(
-            "h3",
+            "h4",
             {className: "route__schemas__response__title"},
             "Response"
           ),
@@ -183,7 +187,7 @@ var Schemas = React.createClass({
             {className: "route__schemas__response"},
             [
               React.createElement(
-                "h4",
+                "h5",
                 {className: "schema__title"},
                 "Headers"
               ),
@@ -195,7 +199,7 @@ var Schemas = React.createClass({
                 })
               ),
               React.createElement(
-                "h4",
+                "h5",
                 {className: "schema__title"},
                 "Body"
               ),
@@ -227,7 +231,7 @@ var Route = React.createClass({
       React.createElement("div", {className: "route"}, [
         React.createElement("div", {className: "route__def"}, [
           React.createElement(
-            "h2",
+            "h3",
             {className: "route__title"},
             this.props.title
           ),
@@ -244,7 +248,7 @@ var Route = React.createClass({
           {
             className: "route__examples",
           },
-          React.createElement("h2", {}, "Examples"),
+          React.createElement("h3", {}, "Examples"),
           React.createElement("p", {}, [
             "Examples: ",
             React.createElement("select", {}, [
@@ -316,14 +320,14 @@ var HttpReq = React.createClass({
     return (
       React.createElement("div", {}, [
         // React.createElement("div", {className: "cmd-line"}, "curl -X GET http://example.com/foo/bar"),
-        React.createElement("h3", {}, "Request"),
+        React.createElement("h4", {}, "Request"),
         React.createElement(Url, {method: this.props.method, url: this.props.url}),
         React.createElement(HttpReqReq,
           Object.assign(this.props.request, {
             className: "example__http example__request"
           })
         ),
-        React.createElement("h3", {}, "Response"),
+        React.createElement("h4", {}, "Response"),
         React.createElement(HttpReqReq,
           Object.assign(this.props.response, {
             className: "example__http example__response"
@@ -347,7 +351,7 @@ var Routes = React.createClass({
     function genRoute(route) {
       return React.createElement("div", {}, [
         React.createElement("a", {
-          id: toSlug(route.title)
+          id: "route-"+toSlug(route.title)
         }),
         React.createElement(Route, route)
       ])
@@ -364,9 +368,17 @@ var Routes = React.createClass({
 
         if(_routes.length > 0) {
           out.push(
-            React.createElement("h1", {}, group.title),
-            React.createElement("p", {}, group.description),
-            React.createElement("div", {}, _routes)
+            React.createElement("div", {className: "route-group"}, [
+              React.createElement("a", {
+                className: "route-group__anchor",
+                id: "group-"+toSlug(group.id)
+              }),
+              React.createElement("div", {className: "route-group__title"}, [
+                React.createElement("h2", {}, group.title),
+                React.createElement("p", {}, group.description)
+              ]),
+              React.createElement("div", {}, _routes)
+            ])
           )
         }
       });
@@ -383,7 +395,7 @@ var Routes = React.createClass({
       var groups = this.props.groups;
       if(groups && groups.hasOwnProperty(group)) {
         var el = React.createElement("div", {}, [
-          React.createElement("h1", {}, groups[group].title),
+          React.createElement("h3", {}, groups[group].title),
           React.createElement("p", {}, groups[group].description)
         ])
         routes.push(el);
