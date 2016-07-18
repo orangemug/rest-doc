@@ -91,11 +91,13 @@ var Toc = React.createClass({
 
         if(_tocs.length > 0) {
           tocs.push(
-            React.createElement(
-              "a",
-              {href: "#group-"+toSlug(group.id)},
-              group.title
-            ),
+            React.createElement("li", {}, [
+              React.createElement(
+                "a",
+                {href: "#group-"+toSlug(group.id)},
+                group.title
+              )
+            ]),
             React.createElement("ul", {}, _tocs)
           )
         }
