@@ -9,15 +9,17 @@ var apiDef = {
     version: "0.1",
     description: "A simple API to show off react-routing"
   },
-  groups: {
-    misc: {
+  groups: [
+    {
+      id: "misc",
       title: "Miscellaneous",
       description: "This is a miscellaneous set of APIs"
     },
-    repo: {
+    {
+      id: "repo",
       title: "Repositories"
     }
-  },
+  ],
   routes: [
     {
       method: "get",
@@ -187,22 +189,6 @@ var apiDef = {
   ]
 }
 
-
-var newRoutes = {};
-apiDef.routes.forEach(function(route) {
-  var group;
-  if(route.group) {
-    group = route.group;
-  }
-  else {
-    group = "misc";
-  }
-
-  newRoutes[group] = newRoutes[group] || [];
-  newRoutes[group].push(route);
-});
-
-apiDef.routes = newRoutes;
 
 ReactDOM.render(
   React.createElement(Routing, apiDef),

@@ -62,37 +62,43 @@ var Toc = React.createClass({
   render: function() {
     var tocs = [];
 
-    for(var group in this.props.items) {
-      var routes = this.props.items[group].map(function(item) {
-        return (
-          React.createElement(
-            "li",
-            {},
-            [
-              React.createElement(
-                "a",
-                {href: "#"+toSlug(item.title)},
-                item.title
-              )
-            ]
-          )
+    var groups = this.props.groups;
+    var routes = this.props.routes;
+
+    function getRoutes(route) {
+      return (
+        React.createElement(
+          "li",
+          {},
+          [
+            React.createElement(
+              "a",
+              {href: "#"+toSlug(route.title)},
+              route.title
+            )
+          ]
         )
+      );
+    }
+
+    if(groups) {
+      groups.forEach(function(group) {
+        var _tocs = routes
+          .filter(function(route) {
+            return route.group === group.id;
+          })
+          .map(getRoutes);
+
+        if(_tocs.length > 0) {
+          tocs.push(
+            group.title,
+            React.createElement("ul", {}, _tocs)
+          )
+        }
       });
-
-      var groupTitle;
-      if(this.props.groups && this.props.groups[group]) {
-        groupTitle = this.props.groups[group].title || group;
-      }
-      else {
-        groupTitle = group;
-      }
-
-      var el = React.createElement("li", {}, [
-        // React.createElement("p", {}, group),
-        groupTitle,
-        React.createElement("ul", {}, routes)
-      ])
-      tocs.push(el)
+    }
+    else {
+      var tocs = routes.map(getRoutes);
     }
 
     return React.createElement(
@@ -332,11 +338,47 @@ function toSlug(str) {
   return str.toLowerCase().replace(" ", "-");
 }
 
-
-module.exports = React.createClass({
+var Routes = React.createClass({
   render: function() {
+    var out;
+    var routes = this.props.routes;
+    var groups = this.props.groups;
+
+    function genRoute(route) {
+      return React.createElement("div", {}, [
+        React.createElement("a", {
+          id: toSlug(route.title)
+        }),
+        React.createElement(Route, route)
+      ])
+    }
+
+    if(groups) {
+      out = [];
+      groups.forEach(function(group) {
+        var _routes = routes
+          .filter(function(route) {
+            return route.group === group.id;
+          })
+          .map(genRoute);
+
+        if(_routes.length > 0) {
+          out.push(
+            React.createElement("h1", {}, group.title),
+            React.createElement("p", {}, group.description),
+            React.createElement("div", {}, _routes)
+          )
+        }
+      });
+    }
+    else {
+      out = routes
+        .map(genRoute)
+    }
+
+    return React.createElement("div", {}, out);
+
     // Generate the routes
-    var routes = [];
     for(var group in this.props.routes) {
       var groups = this.props.groups;
       if(groups && groups.hasOwnProperty(group)) {
@@ -348,18 +390,22 @@ module.exports = React.createClass({
       }
 
       this.props.routes[group].forEach(function(route) {
-        var el = React.createElement("div", {}, [
-          React.createElement("a", {
-            id: toSlug(route.title)
-          }),
-          React.createElement(Route, route)
-        ])
-        routes.push(el);
       });
     }
 
+  }
+});
+
+
+module.exports = React.createClass({
+  render: function() {
+    var routes = React.createElement(Routes, {
+      routes: this.props.routes,
+      groups: this.props.groups
+    });
+
     var tocs = React.createElement(Toc, {
-      items: this.props.routes,
+      routes: this.props.routes,
       groups: this.props.groups
     });
 
