@@ -233,7 +233,6 @@ var Schemas = React.createClass({
 
 var Route = React.createClass({
   render: function() {
-    console.log(">> props", this.props);
     var schemas = React.createElement(Schemas, this.props.schemas);
 
     return (
