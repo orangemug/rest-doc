@@ -147,12 +147,12 @@ h1 {
 }
 
 .toc {
-  padding-left: 1.6em;
 }
 
-.toc > li > ul {
-  list-style-type: lower-roman;
-  padding-left: 1.6em;
+.toc > ul {
+  list-style-type: circle;
+  padding-left: 1.8em;
+  margin: 0.2em 0;
 }
 
 

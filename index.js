@@ -91,13 +91,11 @@ var Toc = React.createClass({
 
         if(_tocs.length > 0) {
           tocs.push(
-            React.createElement("li", {}, [
-              React.createElement(
-                "a",
-                {href: "#group-"+toSlug(group.id)},
-                group.title
-              )
-            ]),
+            React.createElement(
+              "a",
+              {href: "#group-"+toSlug(group.id)},
+              group.title
+            ),
             React.createElement("ul", {}, _tocs)
           )
         }
@@ -107,11 +105,20 @@ var Toc = React.createClass({
       var tocs = routes.map(getRoutes);
     }
 
-    return React.createElement(
-      "ul",
-      {className: "toc"},
-      tocs
-    );
+    if(groups) {
+      return React.createElement(
+        "div",
+        {className: "toc"},
+        tocs
+      );
+    }
+    else {
+      return React.createElement(
+        "div",
+        {className: "toc"},
+        React.createElement("ul", {}, tocs)
+      );
+    }
   }
 });
 
