@@ -22,7 +22,7 @@ npm install orangemug/rest-doc
 
 
 ## Usage
-Define a definition of the rest API. There aren't any docs for this yet but you can see an example in orangemug/futurama-api](https://github.com/orangemug/futurama-api)
+Define a definition of the rest API. There aren't any docs for this yet but you can see an example in [orangemug/futurama-api](https://github.com/orangemug/futurama-api)
 
 ```js
 var RestDoc = require("rest-doc");
