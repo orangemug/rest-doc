@@ -28,7 +28,7 @@ var Table = React.createClass({
 var JsonSchema = React.createClass({
   render: function() {
     if(!this.props.schema) {
-      return React.createElement("div", {className: "schema schema--empty"}, "Not required");
+      return React.createElement("div", {className: "schema schema--empty"}, "None");
     }
 
     var schema = this.props.schema;
